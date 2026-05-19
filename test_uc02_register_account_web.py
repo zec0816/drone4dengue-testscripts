@@ -33,6 +33,7 @@ def go_to_register(driver):
     )
 
 
+# Clear existing input before typing
 def clear_and_type(element, value):
     element.send_keys(Keys.CONTROL, "a")
     element.send_keys(Keys.BACKSPACE)
@@ -43,6 +44,7 @@ def body_text(driver):
     return driver.find_element(By.TAG_NAME, "body").text.lower()
 
 
+# Check whether validation message is shown
 def assert_visible_error_contains(driver, expected_keywords, fail_message):
     text = body_text(driver)
     assert any(keyword.lower() in text for keyword in expected_keywords), fail_message
@@ -85,9 +87,11 @@ def fill_register_form(
     if checkbox:
         try:
             checkbox_el = driver.find_element(By.XPATH, "//input[@type='checkbox']")
+            # Tick agreement checkbox if not selected
             if not checkbox_el.is_selected():
                 driver.execute_script("arguments[0].click();", checkbox_el)
         except:
+            # Fallback click using agreement text
             driver.find_element(By.XPATH, "//*[contains(text(),'By signing up')]").click()
 
 
@@ -121,6 +125,7 @@ def test_successful_registration(driver):
 
 # TC-02-002
 # Covers: TCOV-02-003, TCOV-02-029, TCOV-02-031
+# Test navigation between register and login page
 def test_navigation(driver):
     driver.get(BASE_URL)
 
@@ -178,6 +183,7 @@ def test_empty_fields(driver):
 
     assert "required" in driver.page_source.lower() or "field" in driver.page_source.lower() or "email" in driver.page_source.lower()
 
+
 # TC-02-005
 # Covers: TCOV-02-006, TCOV-02-032, TCOV-02-033
 def test_checkbox_and_policy(driver):
@@ -219,6 +225,7 @@ def test_checkbox_and_policy(driver):
 # TC-02-006
 # Covers: TCOV-02-007, TCOV-02-008, TCOV-02-009, TCOV-02-010, TCOV-02-011, TCOV-02-012
 def test_name_username_boundaries(driver):
+    # Test boundary values for name and username
     boundary_data = [
         ("A", "u"),  
         ("Tan", "tan123"),  
@@ -260,6 +267,7 @@ def test_name_username_boundaries(driver):
 # TC-02-007
 # Covers: TCOV-02-013, TCOV-02-014, TCOV-02-015, TCOV-02-016, TCOV-02-017, TCOV-02-018
 def test_password_boundaries(driver):
+    # Test very long password handling
     very_long_password = (
         "Abc123Abc123Abc123Abc123Abc123Abc123Abc123"
         "Abc123Abc123Abc123Abc123Abc123Abc123"
@@ -283,6 +291,7 @@ def test_password_boundaries(driver):
 
     text = body_text(driver)
 
+    # Ensure incorrect minimum-length prompt is not shown
     assert "at least 8 characters" not in text, (
         "FAIL: Very long password shows wrong prompt: "
         "'password must be at least 8 characters'."
@@ -298,6 +307,8 @@ def test_password_boundaries(driver):
 # TC-02-008
 # Covers: TCOV-02-020, TCOV-02-021, TCOV-02-022
 def test_invalid_format(driver):
+
+    # Test invalid spaces and incorrect phone format
     go_to_register(driver)
 
     fill_register_form(
@@ -364,6 +375,7 @@ def test_robustness(driver):
 
     new_validation_shown = False
 
+    # Detect newly displayed validation message
     for keyword in validation_keywords:
         if keyword in after_visible_text and keyword not in before_visible_text:
             new_validation_shown = True

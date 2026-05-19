@@ -62,6 +62,7 @@ def find_text(driver, text):
     )
 
 
+# Find input field by position
 def find_input_by_index(driver, index):
     inputs = driver.find_elements(
         AppiumBy.CLASS_NAME,
@@ -82,6 +83,7 @@ def clear_and_type(element, text):
     element.send_keys(text)
 
 
+# Hide keyboard before button interaction
 def hide_keyboard(driver):
     try:
         driver.hide_keyboard()
@@ -138,6 +140,7 @@ def go_to_register(driver):
 
 
 def click_agree_checkbox(driver):
+    # Submit registration form
     hide_keyboard(driver)
 
     agree_text = find_text(driver, "I agree")
@@ -273,6 +276,7 @@ def assert_no_success(driver):
 # TC-02-001
 # Covers: TCOV-02-001, TCOV-02-002
 def test_tp_02_001_successful_registration(driver):
+    # Test successful account registration
     go_to_register(driver)
 
     fill_register_form(
@@ -345,6 +349,7 @@ def test_tp_02_003_duplicate_email(driver):
 
 # TC-02-004
 # Covers: TCOV-02-005, TCOV-02-023
+# Test empty required field validation
 def test_tp_02_003_empty_required_fields(driver):
     go_to_register(driver)
 

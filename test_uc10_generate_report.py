@@ -41,6 +41,7 @@ def open_reports_page(driver):
 
 def get_date_inputs(driver):
     inputs = driver.find_elements(By.CSS_SELECTOR, "input[type='date']")
+    # Ensure both Start Date and End Date fields exist
     assert len(inputs) >= 2, "Start Date and End Date inputs not found"
     return inputs[0], inputs[1]
 
@@ -52,6 +53,7 @@ def set_date(date_input, value):
 
 
 def click_generate_report(driver):
+    # Wait until Generate Report button becomes clickable
     WebDriverWait(driver, 10).until(
         lambda d: d.find_element(
             By.XPATH,
@@ -66,6 +68,7 @@ def click_generate_report(driver):
 
 
 def wait_for_report_result(driver):
+    # Wait for either success, no-data, or error result message
     return WebDriverWait(driver, 120).until(
         EC.presence_of_element_located(
             (
@@ -100,6 +103,7 @@ def test_tc_10_001_generate_report_valid_date_range(driver):
     page_text = driver.find_element(By.TAG_NAME, "body").text
 
     assert result.is_displayed()
+    # Accept success report or no-data response
     assert (
         "Total Dengue Cases" in page_text
         or "Export Options" in page_text
@@ -165,6 +169,7 @@ def test_tc_10_004_no_data_date_range_handled(driver):
 def test_tc_10_005_clear_filters_resets_date_fields(driver):
     open_reports_page(driver)
 
+    # Start Date is later than End Date
     start_date, end_date = get_date_inputs(driver)
     set_date(start_date, "2026-04-01")
     set_date(end_date, "2026-04-27")
@@ -188,6 +193,7 @@ def test_tc_10_005_clear_filters_resets_date_fields(driver):
 # Covers: TCOV-10-003, TCOV-10-005, TCOV-10-016, TCOV-10-017
 @pytest.mark.parametrize("export_format", ["JSON", "PDF", "CSV", "XLSX"])
 def test_tc_10_006_export_report_formats(driver, export_format):
+    # Future dates likely contain no prediction data
     generate_report(driver, "2026-04-01", "2026-04-27")
     page_text = driver.find_element(By.TAG_NAME, "body").text
 
@@ -213,4 +219,5 @@ def test_tc_10_006_export_report_formats(driver, export_format):
 
     after = set(os.listdir(download_dir))
 
+    # Verify file downloaded or export error shown
     assert len(after - before) > 0 or "Export failed" in driver.find_element(By.TAG_NAME, "body").text

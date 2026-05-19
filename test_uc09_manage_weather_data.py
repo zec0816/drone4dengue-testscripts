@@ -79,6 +79,7 @@ def set_input(element, value):
 def set_date_input(driver, element_id, value):
     element = driver.find_element(By.ID, element_id)
 
+    # Verify admin can input record date
     driver.execute_script(
         """
         const input = arguments[0];
@@ -112,6 +113,7 @@ def login(driver):
     password_input.clear()
     password_input.send_keys(TEST_PASSWORD)
 
+    # Verify admin login functionality
     login_btn = wait(driver, 30).until(
         EC.element_to_be_clickable(
             (
@@ -148,6 +150,7 @@ def ensure_company_locations_loaded(driver):
 
     body = page_text(driver)
 
+    # Verify locations load without errors
     assert "No token provided" not in body
     assert "Failed to load company locations" not in body
     assert "No Company Locations" not in body
@@ -157,6 +160,7 @@ def ensure_company_locations_loaded(driver):
         EC.presence_of_element_located((By.ID, "locationSelect"))
     )
 
+    # Verify operational areas are available
     wait(driver, 30).until(
         lambda d: len(location_dropdown.find_elements(By.TAG_NAME, "option")) > 1
     )
@@ -189,6 +193,7 @@ def select_first_operational_area(driver, element_id):
 
 
 def wait_for_message(driver, seconds=30):
+    # Verify system response message appears
     wait(driver, seconds).until(
         lambda d:
             "successfully" in page_text(d).lower()
@@ -231,6 +236,7 @@ def click_add_new_record(driver):
 
 
 def fill_weather_form(driver, record_date, temperature, humidity, rainfall, location):
+    # Verify admin can fill weather form fields
     set_date_input(driver, "date", record_date)
     set_input(driver.find_element(By.ID, "temperature"), temperature)
     set_input(driver.find_element(By.ID, "humidity"), humidity)
@@ -500,6 +506,7 @@ def test_tc09_edit(driver):
 def test_tc09_export(driver):
     ensure_company_locations_loaded(driver)
 
+    # Verify weather data can be exported
     before = download_files()
 
     export_btn = wait(driver, 30).until(
@@ -531,7 +538,8 @@ def test_tc09_add_record_system_response(driver):
     )
 
     click_add_record(driver)
-
+    
+    # Verify system responds after adding record
     body = wait_for_message(driver, 30)
 
     assert (
