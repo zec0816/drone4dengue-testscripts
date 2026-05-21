@@ -26,7 +26,7 @@ Make sure the following are installed:
 ```bash
 git clone https://github.com/zec0816/drone4dengue-testscripts.git
 cd drone4dengue-testscripts
-```
+````
 
 ---
 
@@ -42,14 +42,14 @@ pip install pytest selenium appium-python-client webdriver-manager
 
 Before running the test scripts, ensure the following are running:
 
-- Drone4Dengue Web Application
-- Drone4Dengue Server API
-- Android Emulator
-- Appium Server
+* Drone4Dengue Web Application
+* Drone4Dengue Server API
+* Android Emulator
+* Appium Server
 
 ---
 
-## Start Appium Server
+# Start Appium Server
 
 ```bash
 appium
@@ -57,7 +57,7 @@ appium
 
 ---
 
-## Verify Emulator Connection
+# Verify Emulator Connection
 
 ```bash
 adb devices
@@ -88,26 +88,26 @@ pytest test_uc02_register_account_mobile.py
 
 # Current Test Coverage
 
-| Use Case | Description |
-|---|---|
-| UC01 | Login |
-| UC02 | Register Account |
-| UC03 | Reset Password |
-| UC04 | Edit Profile |
-| UC05 | Manage Drone & Location |
-| UC06 | Manage Drone Images |
-| UC07 | Manage User |
-| UC08 | Manage Dengue Data |
-| UC09 | Manage Weather Data |
-| UC10 | Generate Report |
-| UC12 | Manage Settings |
-| UC13 | Get Dengue Notification |
+| Use Case | Description             |
+| -------- | ----------------------- |
+| UC01     | Login                   |
+| UC02     | Register Account        |
+| UC03     | Reset Password          |
+| UC04     | Edit Profile            |
+| UC05     | Manage Drone & Location |
+| UC06     | Manage Drone Images     |
+| UC07     | Manage User             |
+| UC08     | Manage Dengue Data      |
+| UC09     | Manage Weather Data     |
+| UC10     | Generate Report         |
+| UC12     | Manage Settings         |
+| UC13     | Get Dengue Notification |
 
 ---
 
 # Notes
 
-- Ensure ChromeDriver version matches the installed browser version.
-- Ensure all required services are running before executing tests.
-- Some test scripts require stable backend connectivity.
-- Test scripts use predefined testing accounts and sample data.
+* Ensure ChromeDriver version matches the installed browser version.
+* Ensure all required services are running before executing tests.
+* Some test scripts require stable backend connectivity.
+* Test scripts use predefined testing accounts and sample data.
